@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whose Right to the City? Reflections from Kampala and Mumbai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: #0a0a0a;
+      color: #d8d4cc;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    body { cursor: none; }
+
+    #cursor {
+      width: 6px; height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, opacity 0.2s;
+      mix-blend-mode: difference;
+    }
+
+    .page-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 40px 100px;
+    }
+
+    .back-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 300;
+      color: #555;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+      display: inline-block;
+      margin-bottom: 80px;
+    }
+    .back-link:hover { color: #c8c4bc; }
+
+    .project-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 30px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffffff;
+      line-height: 1.35;
+      margin-bottom: 20px;
+    }
+
+    .project-subtitle {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 300;
+      font-style: italic;
+      color: #666;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 50px;
+    }
+
+    .project-description {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 300;
+      color: #888;
+      line-height: 1.9;
+    }
+
+    .project-description p { margin-bottom: 1.4em; }
+    .project-description p:last-child { margin-bottom: 0; }
+
+    .project-img {
+      width: 100%;
+      display: block;
+      margin-top: 60px;
+      margin-bottom: 40px;
+    }
+
+    .contact-note {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 300;
+      font-style: italic;
+      color: #444;
+      letter-spacing: 0.06em;
+      margin-top: 0;
+    }
+
+    @media (max-width: 600px) {
+      .page-wrapper { padding: 40px 20px 60px; }
+      .project-title { font-size: 22px; }
+      .back-link { margin-bottom: 50px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<div class="page-wrapper">
+  <a href="../index.html" class="back-link">&larr; Back</a>
+
+  <h1 class="project-title">Whose Right to the City? Reflections from Kampala and Mumbai</h1>
+  <div class="project-subtitle">Introductory Excerpt</div>
+
+  <div class="project-description">
+    <p>Whose right to the city? This study takes into account theoretical arguments and empirical evidence surrounding this question and reflect on two case studies in order to better understand its significance in urban processes. Two different contexts will be analysed when considering the right to the city: the city of Kampala with refugees' possibility to inhabit it, and the city of Mumbai where "the residents of slums and squatter settlements or of defunct industrial lands in the city center" are the most affected by urban renewal schemes (Weinstein, 2009).</p>
+  </div>
+
+  <img src="../images/right-to-city-page.png" alt="Whose Right to the City?" class="project-img">
+
+  <div class="project-description">
+    <p>These different practical examples are taken into account, with an aim to frame the right to the city and its role in wider urban development. As Harvey (2003) argued, "The freedom to make and remake ourselves and our cities is, one of the most precious yet most neglected of our human rights". This study attempts to frame the importance of this right in Uganda and India, hoping to act as a starting point for further debate in urban and social practices.</p>
+  </div>
+
+  <p class="contact-note">Contact for full text</p>
+</div>
+
+<script>
+  var cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', function(e) {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thermal Energy Network Feasibility Study: NYP &amp; MTA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: #0a0a0a;
+      color: #d8d4cc;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    body { cursor: none; }
+
+    #cursor {
+      width: 6px; height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, opacity 0.2s;
+      mix-blend-mode: difference;
+    }
+
+    .page-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 40px 100px;
+    }
+
+    .back-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 300;
+      color: #555;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+      display: inline-block;
+      margin-bottom: 80px;
+    }
+    .back-link:hover { color: #c8c4bc; }
+
+    .project-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 30px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffffff;
+      line-height: 1.35;
+      margin-bottom: 50px;
+    }
+
+    .project-description {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 300;
+      color: #888;
+      line-height: 1.9;
+      margin-bottom: 80px;
+    }
+
+    .project-description p { margin-bottom: 1.4em; }
+    .project-description p:last-child { margin-bottom: 0; }
+
+    .doc-section { margin-top: 20px; }
+
+    .doc-section-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 300;
+      color: #444;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .preview-strip {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: #222 #0a0a0a;
+    }
+
+    .preview-strip::-webkit-scrollbar { height: 3px; }
+    .preview-strip::-webkit-scrollbar-track { background: #0a0a0a; }
+    .preview-strip::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+
+    .preview-strip img {
+      height: 500px;
+      width: auto;
+      flex-shrink: 0;
+      display: block;
+      border: 1px solid #1a1a1a;
+    }
+
+    .doc-open {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 300;
+      color: #555;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      border: 1px solid #2a2a2a;
+      border-radius: 3px;
+      padding: 10px 20px;
+      display: inline-block;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .doc-open:hover { color: #c8c4bc; border-color: #444; }
+
+    @media (max-width: 600px) {
+      .page-wrapper { padding: 40px 20px 60px; }
+      .project-title { font-size: 22px; }
+      .back-link { margin-bottom: 50px; }
+      .preview-strip img { height: 360px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<div class="page-wrapper">
+  <a href="../index.html" class="back-link">&larr; Back</a>
+
+  <h1 class="project-title">Thermal Energy Network Feasibility Study: NYP &amp; MTA</h1>
+
+  <div class="project-description">
+    <p>This project evaluates the feasibility of a district-scale Thermal Energy Network (TEN) capturing waste heat from New York City's subway system and redistributing it to nearby institutional and residential buildings. The proposal focuses on a pilot network connecting the 168th Street subway station with the NewYork-Presbyterian Manhattan Campus, with potential expansion to surrounding public housing and academic facilities.</p>
+    <p>The analysis responds directly to an MTA Request for Information (RFI) on geothermal and heat recovery technologies. Drawing on precedents including London's Bunhill 2 Energy Centre and Con Edison's Thermal Energy Network pilots in Midtown Manhattan, the project examines the potential for a chiller-based TEN to capture New York Presbyterian Manhattan Campus waste heat and waste heat from 168th St. station.</p>
+    <p>The work combines technical feasibility analysis and cost-benefit assessment, evaluating capital costs, operating costs, potential energy savings and revenue structures under different ownership and partnership models. Particular attention is given to institutional constraints, construction phasing, reliability requirements for hospital facilities and the governance challenges of multi-stakeholder infrastructure delivery involving the MTA, NewYork-Presbyterian, utilities and public agencies.</p>
+    <p>The project critically assesses where and under what conditions thermal energy networks can be scalable, financially viable and replicable across New York City's transit and building systems.</p>
+  </div>
+
+  <div class="doc-section">
+    <div class="doc-section-title">Project Preview</div>
+    <div class="preview-strip">
+      <img src="../document-previews/thermal-energy-1.png" alt="Page 1">
+      <img src="../document-previews/thermal-energy-2.png" alt="Page 2">
+      <img src="../document-previews/thermal-energy-3.png" alt="Page 3">
+    </div>
+    <a href="../documents/thermal-energy.pdf" class="doc-open" target="_blank">Open / Download Project Document</a>
+  </div>
+</div>
+
+<script>
+  var cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', function(e) {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+</script>
+</body>
+</html>
