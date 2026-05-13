@@ -231,6 +231,93 @@
       transition: transform 0.1s, opacity 0.2s;
       mix-blend-mode: difference;
     }
+
+    /* ── MOBILE LAYOUT (≤ 767px) ── */
+    @media (max-width: 767px) {
+
+      /* unlock page scroll */
+      html, body {
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      /* hide custom cursor on touch screens */
+      body { cursor: auto; }
+      #cursor { display: none; }
+
+      /* stack the three columns vertically */
+      .site {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow-x: hidden;
+        width: 100%;
+      }
+
+      /* ── LEFT: name + project list ── */
+      .col-left {
+        width: 100%;
+        padding: 36px 24px 24px;
+        flex-direction: column;
+      }
+
+      .site-name {
+        font-size: 22px;
+        margin-bottom: 32px;
+      }
+
+      .proj-list {
+        margin-top: 0;
+        margin-bottom: 0;
+        align-items: flex-start;
+        gap: 0;
+      }
+
+      .proj-list li {
+        font-size: 11px;
+        text-align: left;
+        padding: 8px 4px;
+        letter-spacing: 0.04em;
+      }
+
+      /* ── CENTER: carousel ── */
+      .col-center {
+        width: 100%;
+        height: 260px;
+        flex-shrink: 0;
+        border-left: none;
+        border-right: none;
+        border-top: 0.5px solid #161616;
+        border-bottom: 0.5px solid #161616;
+        overflow: hidden;
+      }
+
+      /* hide the SVG brackets — too wide for phone */
+      .bracket-wrap { display: none; }
+
+      /* ── RIGHT: about + contact ── */
+      .col-right {
+        width: 100%;
+        padding: 28px 24px 48px;
+        border-top: 0.5px solid #161616;
+      }
+
+      .right-top { margin-bottom: 20px; }
+
+      .rnav a   { font-size: 11px; }
+      .right-loc { font-size: 11px; }
+
+      .about-text {
+        font-size: 12px;
+        color: #888;
+        line-height: 1.9;
+        text-align: left;
+      }
+
+      .contact-block,
+      .contact-block a { font-size: 12px; }
+    }
   </style>
 </head>
 <body>
@@ -456,6 +543,24 @@
   document.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowDown') { e.preventDefault(); step(1);  }
     if (e.key === 'ArrowUp')   { e.preventDefault(); step(-1); }
+  });
+
+  /* ── Touch: swipe on carousel (mobile) ── */
+  var touchStartY = 0;
+  var colCenterEl = document.getElementById('colCenter');
+  colCenterEl.addEventListener('touchstart', function(e) {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  colCenterEl.addEventListener('touchend', function(e) {
+    var dy = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 40) step(dy > 0 ? 1 : -1);
+  }, { passive: true });
+
+  /* ── Touch: tap project list item previews the card (mobile) ── */
+  /* On mobile there's no hover; touchstart shows the card before the click
+     navigates, giving a brief preview flash on tap. */
+  liEls.forEach(function(li, i) {
+    li.addEventListener('touchstart', function() { previewReal(i); }, { passive: true });
   });
 
   /* ── Custom cursor ── */
