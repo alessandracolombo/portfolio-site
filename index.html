@@ -267,6 +267,19 @@
         margin-bottom: 32px;
       }
 
+      /* "Project List" heading inserted by JS above the list */
+      .mobile-proj-heading {
+        font-family: 'DM Mono', monospace;
+        font-size: 12px;
+        font-weight: 300;
+        color: #c8c4bc;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-align: center;
+        padding-top: 36px;
+        padding-bottom: 10px;
+      }
+
       .proj-list {
         margin-top: 0;
         margin-bottom: 0;
@@ -281,26 +294,45 @@
         letter-spacing: 0.04em;
       }
 
-      /* ── CENTER: carousel ── */
+      /* ── CENTER: static stack on mobile ── */
       .col-center {
         width: 100%;
-        height: 260px;
+        height: auto;
         flex-shrink: 0;
         border-left: none;
         border-right: none;
         border-top: 0.5px solid #161616;
-        border-bottom: 0.5px solid #161616;
-        overflow: hidden;
+        border-bottom: none;
+        overflow: visible;
       }
 
-      /* hide the SVG brackets — too wide for phone */
+      /* hide carousel-only elements */
       .bracket-wrap { display: none; }
+      .fade-top, .fade-bottom, .ac-cat, .ac-num { display: none; }
 
-      /* ── RIGHT: about + contact ── */
+      /* ── Mobile image stack ── */
+      .mobile-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 24px 28px 48px;
+      }
+      .mobile-stack-item {
+        display: block;
+        cursor: pointer;
+      }
+      .mobile-stack-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* ── RIGHT: about + contact (moved above proj-list by JS) ── */
       .col-right {
         width: 100%;
-        padding: 28px 24px 48px;
+        padding: 28px 0 0;
         border-top: 0.5px solid #161616;
+        border-left: none;
       }
 
       .right-top { margin-bottom: 20px; }
@@ -387,181 +419,187 @@
 
   /* ── constants ── */
   var N         = projects.length;   /* 8                          */
-  var CARD_H    = 148;               /* matches .ac-card height    */
-  var CARD_GAP  = 10;                /* matches .ac-track gap      */
-  var CARD_STEP = CARD_H + CARD_GAP; /* 158 px per slot            */
+  var isMobile = window.innerWidth < 768;
 
-  /*
-   * FLEX_OFFSET: translateY needed so card[N] (real card 0) lands at the
-   * flexbox centre.  Flexbox centres the whole track, putting the track's
-   * mid-point at the viewport centre.  Card[N]'s centre sits (trackMid −
-   * cardNMid) px *above* the track mid-point, so we shift the track down
-   * by that same amount.
-   *
-   *   trackH   = 3N cards × CARD_H  +  (3N−1) gaps
-   *   trackMid = trackH / 2
-   *   cardNMid = N × CARD_STEP + CARD_H/2   (centre of card[N] from track top)
-   *   FLEX_OFFSET = trackMid − CARD_H/2     (= 1817 for N=8)
-   *
-   * For virtual index v:  ty = FLEX_OFFSET − v × CARD_STEP
-   */
-  var TOTAL     = 3 * N;
-  var TRACK_H   = TOTAL * CARD_H + (TOTAL - 1) * CARD_GAP;
-  var FLEX_OFFSET = TRACK_H / 2 - CARD_H / 2;
+  if (isMobile) {
+    /* ══════════════════════════════════════════
+       MOBILE: reorder sections + simple image stack
+       Order: Name → About → Project list → Images
+    ══════════════════════════════════════════ */
 
-  /* ── state ── */
-  var current = 0;   /* real index 0‥N-1                              */
-  var vIdx    = N;   /* virtual index in the 3× cloned track;
-                        starts at the first card of the middle (real) set */
-  var busy    = false;
+    var colLeft   = document.querySelector('.col-left');
+    var colCenter = document.getElementById('colCenter');
+    var colRight  = document.querySelector('.col-right');
+    var list      = document.getElementById('projList');
 
-  /* ── DOM refs ── */
-  var track = document.getElementById('acTrack');
-  var list  = document.getElementById('projList');
-  var numEl = document.getElementById('acNum');
+    /* Move About/contact (col-right) inside col-left, above the project list */
+    colLeft.insertBefore(colRight, list);
 
-  /* ── Build 3× cloned track (clone | real | clone) ── */
-  var allCards = [];
-  for (var s = 0; s < 3; s++) {
-    projects.forEach(function(p, i) {
-      var card = document.createElement('div');
-      card.className = 'ac-card';
+    /* Add "Project List" heading above the list */
+    var projHeading = document.createElement('div');
+    projHeading.className = 'mobile-proj-heading';
+    projHeading.textContent = 'Project List';
+    colLeft.insertBefore(projHeading, list);
+
+    /* Build project title list — each tap navigates directly */
+    projects.forEach(function(p) {
+      var li = document.createElement('li');
+      li.textContent = p.title;
+      li.addEventListener('click', function(e) {
+        e.stopPropagation();
+        window.location.href = p.url;
+      });
+      list.appendChild(li);
+    });
+
+    /* Build centered image stack inside col-center */
+    var stack = document.createElement('div');
+    stack.className = 'mobile-stack';
+
+    projects.forEach(function(p) {
+      var item = document.createElement('div');
+      item.className = 'mobile-stack-item';
       var img = document.createElement('img');
-      img.src = p.img;
-      img.alt = p.title;
-      card.appendChild(img);
-      /* only the middle (real) set navigates on click */
-      if (s === 1) {
-        (function(url) {
-          card.addEventListener('click', function(e) {
-            e.stopPropagation();
-            window.location.href = url;
-          });
-        })(p.url);
-      }
-      track.appendChild(card);
-      allCards.push(card);
+      img.src  = p.img;
+      img.alt  = p.title;
+      item.appendChild(img);
+      item.addEventListener('click', function() { window.location.href = p.url; });
+      stack.appendChild(item);
     });
-  }
+    colCenter.appendChild(stack);
 
-  /* ── Build title list ── */
-  var liEls = [];
-  projects.forEach(function(p, i) {
-    var li = document.createElement('li');
-    li.textContent = p.title;
-    li.addEventListener('click', function(e) { e.stopPropagation(); window.location.href = p.url; });
-    li.addEventListener('mouseenter', function() { previewReal(i); });
-    li.addEventListener('mouseleave',  function() { applyState(current, vIdx, true); });
-    list.appendChild(li);
-    liEls.push(li);
-  });
+  } else {
+    /* ══════════════════════════════════════════
+       DESKTOP: infinite vertical carousel
+    ══════════════════════════════════════════ */
 
-  /* ── Helpers ── */
+    var CARD_H    = 148;
+    var CARD_GAP  = 10;
+    var CARD_STEP = CARD_H + CARD_GAP;
 
-  /* setTrackY — shift the flex-centred track so card[v] sits at viewport centre */
-  function setTrackY(v, animate) {
-    var ty = FLEX_OFFSET - v * CARD_STEP;
-    if (animate) {
-      track.style.transition = 'transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    } else {
-      track.style.transition = 'none';
+    var TOTAL       = 3 * N;
+    var TRACK_H     = TOTAL * CARD_H + (TOTAL - 1) * CARD_GAP;
+    var FLEX_OFFSET = TRACK_H / 2 - CARD_H / 2;
+
+    var current = 0;
+    var vIdx    = N;
+    var busy    = false;
+
+    var track = document.getElementById('acTrack');
+    var list  = document.getElementById('projList');
+    var numEl = document.getElementById('acNum');
+
+    /* Build 3× cloned track (clone | real | clone) */
+    var allCards = [];
+    for (var s = 0; s < 3; s++) {
+      projects.forEach(function(p, i) {
+        var card = document.createElement('div');
+        card.className = 'ac-card';
+        var img = document.createElement('img');
+        img.src = p.img;
+        img.alt = p.title;
+        card.appendChild(img);
+        if (s === 1) {
+          (function(url) {
+            card.addEventListener('click', function(e) {
+              e.stopPropagation();
+              window.location.href = url;
+            });
+          })(p.url);
+        }
+        track.appendChild(card);
+        allCards.push(card);
+      });
     }
-    track.style.transform = 'translateY(' + ty + 'px)';
-  }
 
-  function highlightCards(realIdx) {
-    allCards.forEach(function(c, i) {
-      c.classList.toggle('active', i % N === realIdx);
+    /* Build title list */
+    var liEls = [];
+    projects.forEach(function(p, i) {
+      var li = document.createElement('li');
+      li.textContent = p.title;
+      li.addEventListener('click', function(e) { e.stopPropagation(); window.location.href = p.url; });
+      li.addEventListener('mouseenter', function() { previewReal(i); });
+      li.addEventListener('mouseleave',  function() { applyState(current, vIdx, true); });
+      list.appendChild(li);
+      liEls.push(li);
     });
-  }
 
-  function highlightList(realIdx) {
-    liEls.forEach(function(l, i) { l.classList.toggle('active', i === realIdx); });
-    numEl.textContent = String(realIdx + 1);
-  }
+    function setTrackY(v, animate) {
+      var ty = FLEX_OFFSET - v * CARD_STEP;
+      track.style.transition = animate
+        ? 'transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        : 'none';
+      track.style.transform = 'translateY(' + ty + 'px)';
+    }
 
-  /* Apply full state: move track + update cards + update list */
-  function applyState(realIdx, v, animate) {
-    setTrackY(v, animate);
-    highlightCards(realIdx);
-    highlightList(realIdx);
-  }
+    function highlightCards(realIdx) {
+      allCards.forEach(function(c, i) {
+        c.classList.toggle('active', i % N === realIdx);
+      });
+    }
 
-  /* Hover preview — slide to the nearest virtual copy of realIdx */
-  function previewReal(realIdx) {
-    var copies  = [realIdx, N + realIdx, 2 * N + realIdx];
-    var nearest = copies.reduce(function(a, b) {
-      return Math.abs(a - vIdx) <= Math.abs(b - vIdx) ? a : b;
+    function highlightList(realIdx) {
+      liEls.forEach(function(l, i) { l.classList.toggle('active', i === realIdx); });
+      numEl.textContent = String(realIdx + 1);
+    }
+
+    function applyState(realIdx, v, animate) {
+      setTrackY(v, animate);
+      highlightCards(realIdx);
+      highlightList(realIdx);
+    }
+
+    function previewReal(realIdx) {
+      var copies  = [realIdx, N + realIdx, 2 * N + realIdx];
+      var nearest = copies.reduce(function(a, b) {
+        return Math.abs(a - vIdx) <= Math.abs(b - vIdx) ? a : b;
+      });
+      setTrackY(nearest, true);
+      highlightCards(realIdx);
+      highlightList(realIdx);
+    }
+
+    function step(dir) {
+      if (busy) return;
+      busy = true;
+      vIdx   += dir;
+      current = ((vIdx % N) + N) % N;
+      applyState(current, vIdx, true);
+      setTimeout(function() {
+        if (vIdx < N || vIdx >= 2 * N) {
+          vIdx = N + current;
+          track.style.transition = 'none';
+          track.style.transform  = 'translateY(' + (FLEX_OFFSET - vIdx * CARD_STEP) + 'px)';
+          track.offsetHeight; /* force reflow before re-enabling transition */
+          track.style.transition = 'transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        }
+        busy = false;
+      }, 700);
+    }
+
+    applyState(0, N, false);
+
+    /* Wheel scroll (centre + left columns) */
+    var cooldown = false;
+    ['col-center', 'col-left'].forEach(function(cls) {
+      var el = document.querySelector('.' + cls);
+      if (!el) return;
+      el.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (cooldown || busy) return;
+        cooldown = true;
+        setTimeout(function() { cooldown = false; }, 320);
+        step(e.deltaY > 0 ? 1 : -1);
+      }, { passive: false });
     });
-    setTrackY(nearest, true);
-    highlightCards(realIdx);
-    highlightList(realIdx);
-  }
 
-  /* ── Navigate: dir = +1 (next) or -1 (prev) ── */
-  function step(dir) {
-    if (busy) return;
-    busy = true;
+    /* Arrow keys */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); step(1);  }
+      if (e.key === 'ArrowUp')   { e.preventDefault(); step(-1); }
+    });
 
-    vIdx   += dir;
-    current = ((vIdx % N) + N) % N;
-    applyState(current, vIdx, true);
-
-    /* After the transition, silently reset into the middle set if we
-       drifted into a clone set, so there is always room to keep going. */
-    setTimeout(function() {
-      if (vIdx < N || vIdx >= 2 * N) {
-        vIdx = N + current;
-        track.style.transition = 'none';
-        track.style.transform  = 'translateY(' + (FLEX_OFFSET - vIdx * CARD_STEP) + 'px)';
-        /* force the browser to apply the no-transition frame before re-enabling */
-        track.offsetHeight;
-        track.style.transition = 'transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-      }
-      busy = false;
-    }, 700); /* slightly longer than the 0.65 s transition */
-  }
-
-  /* ── Init ── */
-  applyState(0, N, false);
-
-  /* ── Scroll (centre + left columns) ── */
-  var cooldown = false;
-  ['col-center', 'col-left'].forEach(function(cls) {
-    var el = document.querySelector('.' + cls);
-    if (!el) return;
-    el.addEventListener('wheel', function(e) {
-      e.preventDefault();
-      if (cooldown || busy) return;
-      cooldown = true;
-      setTimeout(function() { cooldown = false; }, 320);
-      step(e.deltaY > 0 ? 1 : -1);
-    }, { passive: false });
-  });
-
-  /* ── Arrow keys ── */
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowDown') { e.preventDefault(); step(1);  }
-    if (e.key === 'ArrowUp')   { e.preventDefault(); step(-1); }
-  });
-
-  /* ── Touch: swipe on carousel (mobile) ── */
-  var touchStartY = 0;
-  var colCenterEl = document.getElementById('colCenter');
-  colCenterEl.addEventListener('touchstart', function(e) {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-  colCenterEl.addEventListener('touchend', function(e) {
-    var dy = touchStartY - e.changedTouches[0].clientY;
-    if (Math.abs(dy) > 40) step(dy > 0 ? 1 : -1);
-  }, { passive: true });
-
-  /* ── Touch: tap project list item previews the card (mobile) ── */
-  /* On mobile there's no hover; touchstart shows the card before the click
-     navigates, giving a brief preview flash on tap. */
-  liEls.forEach(function(li, i) {
-    li.addEventListener('touchstart', function() { previewReal(i); }, { passive: true });
-  });
+  } /* end desktop branch */
 
   /* ── Custom cursor ── */
   var cursor = document.getElementById('cursor');
